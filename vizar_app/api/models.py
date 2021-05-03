@@ -16,7 +16,7 @@ def generate_unique_code():
 
 # Create your models here.
 class Log(models.Model):
-    id models.AutoField(primary_key=True)
+    id  = models.AutoField(primary_key=True)
     session = models.CharField(max_length=8, default=generate_unique_code, unique=True)
     author = models.CharField(max_length=50, unique=True)
     text = models.CharField(max_length=256)

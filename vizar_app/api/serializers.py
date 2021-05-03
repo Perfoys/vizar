@@ -41,7 +41,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Task
-        fields = ['id', 'username', 'task_name', 'date', 'is_done', 'id']
+        fields = ['id', 'username', 'task_name', 'date', 'is_done']
 
     def create(self, validated_data):
 
@@ -66,7 +66,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
         return Message.objects.create(**validated_data)
 
-    def update(self, instance, validated_data)
+    def update(self, instance, validated_data):
 
         instance.is_read = validated_data.get('is_read', instance.is_read)
         instance.save()
