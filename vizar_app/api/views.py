@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics, status, permissions
-from .serializers import LogSerializer, EventSerializer, TaskSerializer, MessageSerializer
+from .serializers import LogSerializer, EventSerializer, TaskSerializer, MessageSerializer, CreateLogSerializer
 from .models import Log, Event, Task, Message
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsReceiver
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permissions_classes
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 
 
@@ -18,7 +18,7 @@ class LogView(generics.CreateAPIView):
 class CreateLogView(APIView):
     serializer_class = CreateLogSerializer
 
-    def post(self, request, format=None)
+    def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
 
@@ -96,10 +96,29 @@ class MessageList(generics.ListCreateAPIView):
 class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsReceiver]
 
     def delete_queryset(self):
         return Message.objects.filter(username=self.request.user)
 
 
-    
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def show_inbox(request):
+    messages = Message.objects.filter(receiver=request.user)
+    serializer = MessageSerializer(messages, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_user(request):
+    serialized = UserSerializer(data=request.data)
+    if serialized.is_valid():
+        try:
+            User.objects.create_user(serialized.validated_data['username'], serialized.validated_data['email'], serialized.validated_data['password'])
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_409_CONFLICT)
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
