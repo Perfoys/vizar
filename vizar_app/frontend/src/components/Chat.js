@@ -1,16 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Chat_div from '../styled/chat';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { FormControl, Input } from '@material-ui/core';
+import {connect} from "react-redux";
 
-const Chat = () => {
+import {userMessage} from "../actions/vizar";
+
+const Chat = ({chat, userMessage}) => {
+
+    const [message, setMessage] = useState("");
+
+    const handleClick = async (e) => {
+        const code = e.keyCode || e.which;
+
+        if (code===13) {
+            console.log(message);
+            userMessage(message);
+            setMessage("");
+            }
+    }
+
     return (
-        <Chat_div className='chat'>
+        <Chat_div className="chat">
             <h2>Please type or say your sentence</h2>
-            <TextField id="standard-basic" label="Standard"></TextField>
-            <Button variant="contained" color="secondary">Talk</Button>
+
+            {chat.length === 0 ? "" : chat.map((msg) => <div className={msg.type}>{msg.message}</div>)}
+
+            <FormControl>               
+                <Input placeholder="Type your message" onChange={(e) => {setMessage(e.target.value)}} value={message} onKeyPress={handleClick}></Input>
+                <Button variant="contained" color="primary" onClick={handleClick}>Enter</Button>
+                <Button variant="contained" color="secondary">Talk</Button>
+            </FormControl>
+            
         </Chat_div>
     )
 }
 
-export default Chat;
+const mapStateToProps = (state) => ({
+    chat: state.vizar.messages,
+})
+
+export default connect( mapStateToProps, { userMessage })(Chat);
