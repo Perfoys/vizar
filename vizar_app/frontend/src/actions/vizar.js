@@ -16,7 +16,7 @@ export const userMessage = (message) => async (dispatch) => {
     try {
         dispatch({ type: INPUT_SUCCESS, payload: message});
     }
-    catch (e) {
+    catch (error) {
         dispatch({ type: INPUT_FAIL})
     }
 }
@@ -33,3 +33,14 @@ export const createSession = () => {
 }
 
 // Sends the message to the bot - API CALL
+export const sendMessage = () => async (dispatch) => {
+    try {
+        const body = { input: message };
+        const res = axios.post("/api/vizar/message", body);
+        console.log(res);
+        dispatch({ type: MESSAGE_SUCCESS });
+    }
+    catch (error) {
+        dispatch({ type: MESSAGE_FAIL });
+    }
+}

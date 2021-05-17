@@ -5,9 +5,9 @@ import Button from '@material-ui/core/Button';
 import { FormControl, Input } from '@material-ui/core';
 import {connect} from "react-redux";
 
-import {userMessage} from "../actions/vizar";
+import {userMessage, sendMessage} from "../actions/vizar";
 
-const Chat = ({chat, userMessage}) => {
+const Chat = ({chat, userMessage, sendMessage}) => {
 
     const [message, setMessage] = useState("");
 
@@ -17,6 +17,7 @@ const Chat = ({chat, userMessage}) => {
         if (code===13) {
             console.log(message);
             userMessage(message);
+            sendMessage(message);
             setMessage("");
             }
     }
@@ -41,4 +42,4 @@ const mapStateToProps = (state) => ({
     chat: state.vizar.messages,
 })
 
-export default connect( mapStateToProps, { userMessage })(Chat);
+export default connect( mapStateToProps, { userMessage, sendMessage })(Chat);
