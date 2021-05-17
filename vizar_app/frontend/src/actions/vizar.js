@@ -38,7 +38,7 @@ export const sendMessage = () => async (dispatch) => {
         const body = { input: message };
         const res = axios.post("/api/vizar/message", body);
         console.log(res);
-        dispatch({ type: MESSAGE_SUCCESS });
+        dispatch({ type: MESSAGE_SUCCESS, payload: (await res).data.output.generic[0].text });
     }
     catch (error) {
         dispatch({ type: MESSAGE_FAIL });

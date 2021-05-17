@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chat_div from '../styled/chat';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -10,6 +10,12 @@ import {userMessage, sendMessage} from "../actions/vizar";
 const Chat = ({chat, userMessage, sendMessage}) => {
 
     const [message, setMessage] = useState("");
+    const endOfMessages = useRef(null);
+
+    const scrollToBottom = () => {
+        endOfMessages.current.scrollIntoView({ behavior: "smooth" });
+    }
+    useEffect(scrollToBottom, [chat]);
 
     const handleClick = async (e) => {
         const code = e.keyCode || e.which;
@@ -27,7 +33,7 @@ const Chat = ({chat, userMessage, sendMessage}) => {
             <h2>Please type or say your sentence</h2>
 
             {chat.length === 0 ? "" : chat.map((msg) => <div className={msg.type}>{msg.message}</div>)}
-
+            <div ref={endOfMessages}></div>
             <FormControl>               
                 <Input placeholder="Type your message" onChange={(e) => {setMessage(e.target.value)}} value={message} onKeyPress={handleClick}></Input>
                 <Button variant="contained" color="primary" onClick={handleClick}>Enter</Button>
