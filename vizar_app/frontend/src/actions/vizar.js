@@ -8,6 +8,9 @@ import {
     MESSAGE_FAIL,
 } from './types';
 
+// Import axios
+import axios from "axios";
+
 // Function that handle users message
 export const userMessage = (message) => async (dispatch) => {
     try {
@@ -19,5 +22,14 @@ export const userMessage = (message) => async (dispatch) => {
 }
 
 // Create a session - API CALL
+export const createSession = () => {
+    try {
+        const res = await axios.get("/api/vizar/session");
+        dispatch({ type: SESSION_SUCCESS, payload: res.data});
+    }
+    catch(error) {
+        dispatch({ type: SESSION_FAIL })
+    }
+}
 
 // Sends the message to the bot - API CALL

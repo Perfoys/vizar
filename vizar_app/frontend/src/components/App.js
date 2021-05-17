@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { render } from "react-dom";
 
 import { Provider } from 'react-redux';
@@ -12,7 +12,25 @@ import Header from './Header';
 import Chat from './Chat';
 import Section from '../styled/section';
 
+import { createSession } from "../actions/vizar";
+
+import axios from "axios";
+
+if (localStorage.session) {
+    axios.defaults.headers.common["session_id"] = localStorage.session;
+}
+else {
+    delete axios.defaults.headers.common["session_id"];
+}
+
 const App = () => { 
+    useEffect(() => {
+        // Check if there session
+        if (!localStorage.session) {
+            // Create session
+            store.dispatch(createSession());
+        }
+    })
     return (
         <Provider store={store}>
             <Section>

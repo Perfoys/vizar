@@ -29,6 +29,15 @@ export default (state=initialState, action) => {
             return {
                 ...state,
             }
+        case SESSION_SUCCESS:
+            localStorage.setItem("session", payload["session_id"]);
+            return {
+                ...state,
+            }
+        case SESSION_FAIL:
+            return {
+                ...state,
+            }
         default: 
             return {
                 ...state,
