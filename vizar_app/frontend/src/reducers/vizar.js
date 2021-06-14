@@ -1,56 +1,24 @@
-//import types
-import {
-    INPUT_SUCCESS,
-    INPUT_FAIL,
-    SESSION_SUCCESS,
-    SESSION_FAIL,
-    MESSAGE_SUCCESS,
-    MESSAGE_FAIL,
-} from '../actions/types';
+//import reducers
+import {registerReducer} from "./register";
+import {loginReducer} from "./login";
+import {inputReducer} from "./input";
+import {messageReducer} from "./message";
+import {sessionReducer} from "./session";
 
 // Initial state
 const initialState = {
-    messages:[]
+
 }
 
 // Switch statement - update state
 export default (state=initialState, action) => {
-    const {type, payload} = action;
-    let { messages } = state;
-
-    switch(type) {
-        case INPUT_SUCCESS:
-            messages = [...messages, { message: payload, type: "user"}];
-            return {
-                ...state,
-                messages,
-            }
-        case INPUT_FAIL:
-            return {
-                ...state,
-            }
-        case SESSION_SUCCESS:
-            localStorage.setItem("session", payload["session_id"]);
-            return {
-                ...state,
-            }
-        case SESSION_FAIL:
-            return {
-                ...state,
-            }
-        case MESSAGE_SUCCESS:
-            messages = [...messages, { message: payload, type: "bot" }];
-            return {
-                ...messages,
-                ...state,
-            }
-        case MESSAGE_FAIL:
-            return {
-                ...state,
-            }
-        default: 
-            return {
-                ...state,
-            }
+    return {
+        input: inputReducer(state.input, action),
+        session: sessionReducer(state.session, action),
+        message: messageReducer(state.message, action),
+        register: registerReducer(state.register, action),
+        login: loginReducer(state.login, action),
+    
     }
+
 }

@@ -1,18 +1,34 @@
 from django.shortcuts import render
+from requests import session
 from rest_framework import generics, status, permissions
-from .serializers import LogSerializer, EventSerializer, TaskSerializer, MessageSerializer, CreateLogSerializer
-from .models import Log, Event, Task, Message
+from .serializers import LogSerializer, EventSerializer, TaskSerializer, MessageSerializer, CreateLogSerializer, UserSerializer, SessionSerializer
+from .models import Log, Event, Task, Message, Session
 from .permissions import IsOwnerOrReadOnly, IsReceiver
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 
+from .services import audio_service, vizar_service
+from .speech import speech_recognizer
+import json
+
 
 # Create your views here.
 class LogView(generics.CreateAPIView):
     queryset = Log.objects.all()
     serializer_class = LogSerializer
+
+
+class CreateSessionView(APIView):
+    serializer_class = SessionSerializer
+
+    def get(self, request, format=None):
+        
+        session = Session()
+        session.save()
+        return Response(SessionSerializer(session).data, status=status.HTTP_200_OK)
+
 
 
 class CreateLogView(APIView):
@@ -24,7 +40,8 @@ class CreateLogView(APIView):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            author = serializer.data.get('author')
+            author = serializer.data.get('author_name')
+            text = serializer.data.get('text')
             session = self.request.session.session_key
             queryset = Log.objects.filter(author=author)
             if queryset.exists():
@@ -33,7 +50,7 @@ class CreateLogView(APIView):
                 log.text = text
                 log.save(update_fields=['author', 'text'])
             else: 
-                log = Log(author=author, session=session, text=text)
+                log = Log(author_name=author, session=session, text=text)
                 log.save()
 
         return Response(LogSerializer(log).data, status=status.HTTP_200_OK)

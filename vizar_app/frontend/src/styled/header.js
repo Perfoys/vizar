@@ -1,13 +1,13 @@
+// Import styled-components
 import styled from 'styled-components';
 
-const Header_div = styled.header`
-    color: palevioletred;
+// Create styled component 
+export const Header_div = styled.header`
+    color: white;
     width: 1000px;
-    margin: 1em auto;
+    margin: 0 auto;
     padding: 0.25em 1em;
-    border: 2px solid palevioletred;
+    background-color: palevioletred;
     border-radius: 3px;
     text-align: center;
 `;
-
-export default Header_div;

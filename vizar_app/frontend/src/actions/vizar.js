@@ -22,9 +22,10 @@ export const userMessage = (message) => async (dispatch) => {
 }
 
 // Create a session - API CALL
-export const createSession = () => {
+export const createSession = () => async (dispatch) => {
     try {
-        const res = await axios.get("/api/vizar/session");
+        const res = await axios.get("/api/session");
+        console.log(res.data);
         dispatch({ type: SESSION_SUCCESS, payload: res.data});
     }
     catch(error) {
@@ -36,7 +37,7 @@ export const createSession = () => {
 export const sendMessage = () => async (dispatch) => {
     try {
         const body = { input: message };
-        const res = axios.post("/api/vizar/message", body);
+        const res = axios.post("/api/vizar", body);
         console.log(res);
         dispatch({ type: MESSAGE_SUCCESS, payload: (await res).data.output.generic[0].text });
     }

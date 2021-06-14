@@ -10,17 +10,21 @@ import FormControl from '@material-ui/core/FormControl';
 
 import Header from './Header';
 import Chat from './Chat';
-import Section from '../styled/section';
+import Register from "./Register";
+import { Section } from '../styled/section';
 
 import { createSession } from "../actions/vizar";
 
 import axios from "axios";
+import Login from "./Login";
+import HomePage from "./HomePage";
 
 if (localStorage.session) {
-    axios.defaults.headers.common["session_id"] = localStorage.session;
+    delete axios.defaults.headers.common["session"];
+    axios.defaults.headers.common["session"] = localStorage.session;
 }
 else {
-    delete axios.defaults.headers.common["session_id"];
+    delete axios.defaults.headers.common["session"];
 }
 
 const App = () => { 
@@ -31,11 +35,12 @@ const App = () => {
             store.dispatch(createSession());
         }
     })
+    console.log(store.getState())
     return (
         <Provider store={store}>
             <Section>
             <Header></Header>
-            <Chat></Chat>
+            <HomePage></HomePage>
             </Section>
         </Provider>
     )

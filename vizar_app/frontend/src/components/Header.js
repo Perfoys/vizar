@@ -1,5 +1,5 @@
 import React from 'react';
-import Header_div from '../styled/header';
+import { Header_div } from '../styled/header';
 
  
 const Header = () => {

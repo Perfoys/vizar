@@ -1,5 +1,6 @@
+from requests import Session
 from rest_framework import serializers
-from .models import Log, Event, Task, Message
+from .models import Log, Event, Task, Message, Session
 from django.contrib.auth.models import User
 
 
@@ -7,14 +8,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password']
+        fields = ['username', 'email', 'password']
+
+
+class SessionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Session
+        fields = ['id', 'session', 'date']
 
 
 class LogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Log
-        fields = ['id', 'session', 'author', 'text', 'audio_num', 'date']
+        fields = ['id', 'session', 'author_name', 'text', 'date']
 
 
 class EventSerializer(serializers.ModelSerializer):

@@ -2,9 +2,11 @@
 import styled from 'styled-components';
 
 // Create styled component 
-export const Chat_div = styled.section`
-    width: 1000px;
+export const Register_div = styled.div`
+    width: 400px;
+    height: 500px;
     margin: 0 auto;
     padding: 1em;
-    box-shadow: 0px 1px 1px 0px black;
+    display: flex;
+    flex-direction: column;
 `;

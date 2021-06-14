@@ -7,20 +7,24 @@ def generate_unique_code():
     length = 6
 
     while True:
-        code = ''.join(random.choices(string.ascii_uppercase, k=length))
-        if Log.objects.filter(code=code).count() == 0:
+        session = ''.join(random.choices(string.ascii_uppercase, k=length))
+        if Session.objects.filter(session=session).count() == 0:
             break
     
-    return code
+    return session
 
 
 # Create your models here.
 class Log(models.Model):
     id  = models.AutoField(primary_key=True)
     session = models.CharField(max_length=8, default=generate_unique_code, unique=True)
-    author = models.CharField(max_length=50, unique=True)
+    author_name = models.CharField(max_length=100, default=" ", unique=True)
     text = models.CharField(max_length=256)
-    audio_num = models.CharField(max_length=256)
+    date = models.DateTimeField(auto_now_add=True)
+
+class Session(models.Model):
+    id = models.AutoField(primary_key=True)
+    session = models.CharField(max_length=8, default=generate_unique_code, unique=True)
     date = models.DateTimeField(auto_now_add=True)
 
 class Event(models.Model):
