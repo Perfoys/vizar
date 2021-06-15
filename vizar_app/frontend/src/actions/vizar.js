@@ -34,12 +34,12 @@ export const createSession = () => async (dispatch) => {
 }
 
 // Sends the message to the bot - API CALL
-export const sendMessage = () => async (dispatch) => {
+export const sendMessage = (content) => async (dispatch) => {
     try {
-        const body = { input: message };
-        const res = axios.post("/api/vizar", body);
-        console.log(res);
-        dispatch({ type: MESSAGE_SUCCESS, payload: (await res).data.output.generic[0].text });
+        const body = { author_name: content.type, text: content.message, session: content.session };
+        const res = axios.post("/api/log/", body);
+        console.log((await res).data);
+        dispatch({ type: MESSAGE_SUCCESS, payload: (await res).data });
     }
     catch (error) {
         dispatch({ type: MESSAGE_FAIL });

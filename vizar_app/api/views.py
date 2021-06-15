@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from requests import session
 from rest_framework import generics, status, permissions
-from .serializers import LogSerializer, EventSerializer, TaskSerializer, MessageSerializer, CreateLogSerializer, UserSerializer, SessionSerializer
+from .serializers import LogSerializer, EventSerializer, TaskSerializer, MessageSerializer, UserSerializer, SessionSerializer
 from .models import Log, Event, Task, Message, Session
 from .permissions import IsOwnerOrReadOnly, IsReceiver
 from rest_framework.views import APIView
@@ -32,26 +32,17 @@ class CreateSessionView(APIView):
 
 
 class CreateLogView(APIView):
-    serializer_class = CreateLogSerializer
+    serializer_class = LogSerializer
 
     def post(self, request, format=None):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            author = serializer.data.get('author_name')
+            author_name = serializer.data.get('author_name')
             text = serializer.data.get('text')
-            session = self.request.session.session_key
-            queryset = Log.objects.filter(author=author)
-            if queryset.exists():
-                log = queryset[0]
-                log.author = author
-                log.text = text
-                log.save(update_fields=['author', 'text'])
-            else: 
-                log = Log(author_name=author, session=session, text=text)
-                log.save()
+            session = serializer.data.get('session')
+            log = Log(author_name=author_name, session=session, text=text)
+            log.save()
 
         return Response(LogSerializer(log).data, status=status.HTTP_200_OK)
 

@@ -80,9 +80,5 @@ class MessageSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class CreateLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Log
-        fields = ('author', 'text')
 
         

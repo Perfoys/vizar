@@ -14,10 +14,10 @@ export const messageReducer = (state=initialState, action) => {
 
     switch(type) {
         case MESSAGE_SUCCESS:
-            messages = [...messages, { message: payload, type: "bot" }];
+            messages = [...messages, { message: payload.text, type: "bot" }];
             return {
-                ...messages,
                 ...state,
+                messages,
             }
         case MESSAGE_FAIL:
             return {
